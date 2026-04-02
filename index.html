@@ -172,6 +172,7 @@
           category: `eq.${answers.category}`,
           budget_range: `eq.${answers.budget_range}`,
           priority: `eq.${answers.priority}`,
+          order: 'is_best_match.desc',
           limit: '3'
         });
 
@@ -192,13 +193,7 @@
         const products = await response.json();
 
         if (!products || products.length === 0) {
-          const fallbackParams = new URLSearchParams({
-            select: '*',
-            category: `eq.${answers.category}`,
-            budget_range: `eq.${answers.budget_range}`,
-            limit: '3'
-          });
-          const fallbackResponse = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?${fallbackParams.toString()}`, {
+          const fallbackResponse = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*&category=eq.${answers.category}&budget_range=eq.${answers.budget_range}&order=is_best_match.desc&limit=3`, {
             method: 'GET',
             headers: {
               apikey: SUPABASE_ANON_KEY,
@@ -231,13 +226,18 @@
         note.textContent = 'Closest match based on your budget.';
         container.appendChild(note);
       }
-      products.forEach((p, i) => {
+
+      // Sort so is_best_match = true comes first
+      const sorted = [...products].sort((a, b) => (b.is_best_match === true) - (a.is_best_match === true));
+
+      sorted.forEach((p, i) => {
+        const isBestMatch = p.is_best_match === true;
         const card = document.createElement('div');
-        card.className = i === 0 ? 'card top' : 'card';
+        card.className = isBestMatch ? 'card top' : 'card';
         card.innerHTML = `
           ${p.image_url ? `<img class="card-img" src="${p.image_url}" alt="${p.name || 'Product'}" onerror="this.style.display='none'"/>` : ''}
           <div class="card-body">
-            ${i === 0 ? '<div class="card-label">Best match</div>' : ''}
+            ${isBestMatch ? '<div class="card-label">Best match</div>' : ''}
             <div class="card-row">
               <div class="card-name">${p.name || 'Product'}</div>
               <div class="card-price">$${p.price ?? '—'}</div>
