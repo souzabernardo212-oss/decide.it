@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="color-scheme" content="light">
+  <style>:root{color-scheme:light!important}@media(prefers-color-scheme:dark){:root{color-scheme:light!important}body{background:#fff!important;color:#111!important}}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>decide.it</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { color-scheme: light; font-family: 'Inter', sans-serif; background: #fff; color: #111; min-height: 100vh; }
+    nav { padding: 24px 40px; border-bottom: 1px solid #f0f0f0; }
+    .logo { font-size: 16px; font-weight: 700; color: #111; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .home { max-width: 560px; margin: 110px auto 0; padding: 0 40px; }
+    .home h1 { font-size: 40px; font-weight: 600; line-height: 1.1; letter-spacing: -2px; margin-bottom: 18px; color: #111; }
+    .home p { font-size: 17px; color: #666; line-height: 1.7; margin-bottom: 40px; max-width: 420px; }
+    .btn { background: #111; color: #fff; border: none; padding: 16px 32px; font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer; font-family: inherit; transition: opacity 0.15s; display: inline-block; }
+    .btn:hover { opacity: 0.75; }
+    .feedback-section { max-width: 560px; margin: 100px auto 0; padding: 32px 40px 100px; border-top: 1px solid #f0f0f0; }
+    .feedback-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .feedback-section p { font-size: 14px; color: #888; margin-bottom: 20px; line-height: 1.6; }
+    .btn-black { display: inline-block; background: #111; color: #fff; border: none; padding: 14px 28px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; font-family: inherit; text-decoration: none; transition: opacity 0.15s; }
+    .btn-black:hover { opacity: 0.75; }
+    .quiz { max-width: 560px; margin: 80px auto; padding: 0 40px; }
+    .progress { width: 100%; height: 2px; background: #f0f0f0; border-radius: 2px; margin-bottom: 48px; }
+    .progress-fill { height: 100%; background: #111; border-radius: 2px; transition: width 0.3s ease; }
+    .step { font-size: 12px; font-weight: 600; color: #bbb; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .quiz h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 32px; }
+    .opts { display: flex; flex-direction: column; gap: 8px; }
+    .opt { background: #fff; border: 1px solid #e8e8e8; color: #111; padding: 14px 18px; font-size: 14px; font-weight: 500; border-radius: 8px; cursor: pointer; text-align: left; font-family: inherit; transition: border-color 0.15s; }
+    .opt:hover { border-color: #111; }
+    .results { max-width: 560px; margin: 80px auto; padding: 0 40px 80px; }
+    .results h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .results .sub { font-size: 14px; color: #aaa; margin-bottom: 32px; }
+    .card { border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; margin-bottom: 10px; cursor: pointer; transition: border-color 0.15s; }
+    .card:hover { border-color: #111; }
+    .card.top { border-color: #111; }
+    .card-img { width: 100%; height: 180px; object-fit: contain; background: #fafafa; padding: 16px; }
+    .card-body { padding: 16px 20px 20px; }
+    .card-label { font-size: 11px; font-weight: 600; color: #111; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+    .card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .card-name { font-size: 15px; font-weight: 600; }
+    .card-price { font-size: 15px; font-weight: 700; }
+    .card-desc { font-size: 13px; color: #aaa; }
+    .loading { text-align: center; padding: 40px; font-size: 14px; color: #aaa; }
+    .btn-outline { width: 100%; background: transparent; border: 1px solid #e8e8e8; color: #111; padding: 14px; font-size: 14px; font-weight: 500; border-radius: 8px; cursor: pointer; margin-top: 16px; font-family: inherit; transition: border-color 0.15s; }
+    .btn-outline:hover { border-color: #111; }
+    .btn-link { display: block; background: none; border: none; color: #bbb; font-size: 13px; cursor: pointer; margin: 20px auto 0; font-family: inherit; text-decoration: underline; }
+    .error-box { text-align: center; padding: 20px; font-size: 14px; color: #b00020; background: #fff5f5; border: 1px solid #ffd6d6; border-radius: 8px; }
+    @media (max-width: 600px) {
+      nav { padding: 20px 24px; }
+      .home, .quiz, .results, .feedback-section { padding-left: 24px; padding-right: 24px; }
+      .home { margin-top: 60px; }
+      .home h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">decide.it</div>
+  </nav>
+
+  <div class="screen active" id="s-home">
+    <div class="home">
+      <h1>What if shopping took 8 seconds?</h1>
+      <p>Too many options. You lose time, money and patience.</p>
+      <button class="btn" onclick="go()">Start deciding</button>
+    </div>
+    <div class="feedback-section">
+      <h3>Did we help you decide?</h3>
+      <p>We are just getting started. Your feedback helps us build something people actually love.</p>
+      <a class="btn-black" href="https://docs.google.com/forms/d/e/1FAIpQLSeBrp4Udqgtf45gwW5Lr6VOR2fgF9O73SgAWsF8fJDnanm4cg/viewform?usp=publish-editor" target="_blank">Share your thoughts</a>
+    </div>
+  </div>
+
+  <div class="screen" id="s-quiz">
+    <div class="quiz">
+      <div class="progress">
+        <div class="progress-fill" id="bar" style="width:33%"></div>
+      </div>
+      <p class="step" id="step">Step 1 of 3</p>
+      <h2 id="qtitle"></h2>
+      <div class="opts" id="opts"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="s-results">
+    <div class="results">
+      <h2>Here's your answer.</h2>
+      <p class="sub">Based on your answers</p>
+      <div id="products-container">
+        <div class="loading">Finding your best options...</div>
+      </div>
+      <button class="btn-outline">Still didn't find it?</button>
+      <button class="btn-link" onclick="restart()">Start over</button>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://uhgtbypkvtlqafxvrfzc.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZ3RieXBrdnRscWFmeHZyZnpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjIyMzMsImV4cCI6MjA4OTc5ODIzM30.z07_uk7OZ5Yc_SjCyWM6VMysguwApyuZHOVrDWV6rZ0';
+    const TABLE_NAME = 'Products';
+
+    const qs = [
+      { step: "Step 1 of 3", title: "What are you deciding today?", w: "33%", opts: ["Headphones"] },
+      { step: "Step 2 of 3", title: "What is your budget?",         w: "66%", opts: ["Under $50", "$50-$100", "Above $100"] },
+      { step: "Step 3 of 3", title: "What matters most?",           w: "100%", opts: ["Best quality", "Best price", "Both"] }
+    ];
+
+    let cur = 0;
+    let answers = {};
+
+    function show(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function go() { cur = 0; answers = {}; show('s-quiz'); render(); }
+
+    function render() {
+      const q = qs[cur];
+      document.getElementById('step').textContent = q.step;
+      document.getElementById('qtitle').textContent = q.title;
+      document.getElementById('bar').style.width = q.w;
+      const c = document.getElementById('opts');
+      c.innerHTML = '';
+      q.opts.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'opt';
+        b.textContent = t;
+        b.onclick = () => next(t);
+        c.appendChild(b);
+      });
+      if (cur === 0) {
+        const p = document.createElement('p');
+        p.style.cssText = 'font-size:13px;color:#bbb;margin-top:16px;';
+        p.textContent = 'More categories coming soon.';
+        c.appendChild(p);
+      }
+    }
+
+    function next(answer) {
+      if (cur === 0) answers.category = answer.toLowerCase();
+      if (cur === 1) {
+        if (answer === 'Under $50') answers.budget_range = 'under $50';
+        else if (answer === '$50-$100') answers.budget_range = '$50-$100';
+        else answers.budget_range = 'above $100';
+      }
+      if (cur === 2) {
+        if (answer === 'Best quality') answers.priority = 'best quality';
+        else if (answer === 'Best price') answers.priority = 'best price';
+        else answers.priority = 'both';
+      }
+      cur++;
+      if (cur < qs.length) render();
+      else { show('s-results'); fetchProducts(); }
+    }
+
+    async function fetchProducts() {
+      const container = document.getElementById('products-container');
+      container.innerHTML = '<div class="loading">Finding your best options...</div>';
+
+      try {
+        const params = new URLSearchParams({
+          select: '*',
+          category: `eq.${answers.category}`,
+          budget_range: `eq.${answers.budget_range}`,
+          priority: `eq.${answers.priority}`,
+          limit: '3'
+        });
+
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?${params.toString()}`, {
+          method: 'GET',
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`HTTP ${response.status} - ${errText}`);
+        }
+
+        const products = await response.json();
+
+        if (!products || products.length === 0) {
+          const fallbackParams = new URLSearchParams({
+            select: '*',
+            category: `eq.${answers.category}`,
+            budget_range: `eq.${answers.budget_range}`,
+            limit: '3'
+          });
+          const fallbackResponse = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?${fallbackParams.toString()}`, {
+            method: 'GET',
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          const fallbackProducts = await fallbackResponse.json();
+          renderProducts(fallbackProducts, true);
+          return;
+        }
+
+        renderProducts(products, false);
+      } catch (err) {
+        document.getElementById('products-container').innerHTML =
+          `<div class="error-box">Something went wrong: ${err.message}</div>`;
+      }
+    }
+
+    function renderProducts(products, isFallback) {
+      const container = document.getElementById('products-container');
+      if (!products || products.length === 0) {
+        container.innerHTML = '<div class="loading">No products found. We are adding more soon!</div>';
+        return;
+      }
+      container.innerHTML = '';
+      if (isFallback) {
+        const note = document.createElement('p');
+        note.style.cssText = 'font-size:13px;color:#aaa;margin-bottom:16px;';
+        note.textContent = 'Closest match based on your budget.';
+        container.appendChild(note);
+      }
+      products.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = i === 0 ? 'card top' : 'card';
+        card.innerHTML = `
+          ${p.image_url ? `<img class="card-img" src="${p.image_url}" alt="${p.name || 'Product'}" onerror="this.style.display='none'"/>` : ''}
+          <div class="card-body">
+            ${i === 0 ? '<div class="card-label">Best match</div>' : ''}
+            <div class="card-row">
+              <div class="card-name">${p.name || 'Product'}</div>
+              <div class="card-price">$${p.price ?? '—'}</div>
+            </div>
+            <div class="card-desc">${p.description || ''}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function restart() { show('s-home'); }
+  </script>
+
+</body>
+</html>
