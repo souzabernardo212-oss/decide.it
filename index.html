@@ -92,11 +92,15 @@
   <div class="screen" id="s-results">
     <div class="results">
       <h2>Here's your answer.</h2>
-      <p class="sub">Based on your answers</p>
+      <p class="sub">Based on your own preferences</p>
       <div id="products-container">
         <div class="loading">Finding your best options...</div>
       </div>
-      <button class="btn-outline">Still didn't find it?</button>
+      <button class="btn" style="width:100%;margin-top:16px;" onclick="document.getElementById('not-found-msg').style.display='block';this.style.display='none'">Still didn't find it?</button>
+      <div id="not-found-msg" style="display:none;margin-top:16px;padding:20px;background:#fafafa;border-radius:8px;border:1px solid #f0f0f0;">
+        <p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:10px;">We're working on more specific options. Check back soon.</p>
+        <p style="font-size:12px;color:#bbb;">Coming next: Brand · Size · Color · Comfort</p>
+      </div>
       <button class="btn-link" onclick="restart()">Start over</button>
     </div>
   </div>
@@ -249,8 +253,13 @@
       });
     }
 
-    function restart() { show('s-home'); }
+    function restart() { 
+      document.getElementById('not-found-msg').style.display = 'none';
+      document.querySelector('.btn[onclick*="not-found-msg"]') && (document.querySelector('.btn[onclick*="not-found-msg"]').style.display = 'block');
+      show('s-home'); 
+    }
   </script>
 
 </body>
 </html>
+
