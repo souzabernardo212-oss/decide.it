@@ -239,6 +239,10 @@
         const isBestMatch = p.is_best_match === true;
         const card = document.createElement('div');
         card.className = isBestMatch ? 'card top' : 'card';
+        if (p.amazon_url) {
+          card.style.cursor = 'pointer';
+          card.onclick = () => window.open(p.amazon_url, '_blank');
+        }
         card.innerHTML = `
           ${p.image_url ? `<img class="card-img" src="${p.image_url}" alt="${p.name || 'Product'}" onerror="this.style.display='none'"/>` : ''}
           <div class="card-body">
@@ -248,6 +252,7 @@
               <div class="card-price">$${p.price ?? '—'}</div>
             </div>
             <div class="card-desc">${p.description || ''}</div>
+            ${p.amazon_url ? '<div style="font-size:12px;color:#888;margin-top:8px;">View on Amazon →</div>' : ''}
           </div>
         `;
         container.appendChild(card);
