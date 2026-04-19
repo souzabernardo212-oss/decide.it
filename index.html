@@ -263,7 +263,7 @@
         card.innerHTML = `
           ${p.image_url ? `<img class="card-img" src="${p.image_url}" alt="${p.name || 'Product'}" onerror="this.style.display='none'"/>` : ''}
           <div class="card-body">
-            ${i === 0 ? '<div class="card-label">Best match</div>' : ''}
+            ${i === 0 ? '<div class="card-label">Best for you</div>' : ''}
             <div class="card-row">
               <div class="card-name">${p.name || 'Product'}</div>
               <div class="card-price">$${p.price ?? '—'}</div>
